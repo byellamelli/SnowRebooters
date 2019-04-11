@@ -9,11 +9,11 @@ namespace CheckAging.Models
     {
         public int Id { get; set; }
 
-        public string DateIssued { get; set; }
+        public DateTime DateIssued { get; set; }
 
-        public string DateCleared { get; set; }
+        public DateTime DateCleared { get; set; }
 
-        public string Amount { get; set; }
+        public decimal Amount { get; set; }
 
         public string Payee { get; set; }
 
