@@ -1,0 +1,16 @@
+<p *ngIf="!buyers"><em>Loading...</em></p>
+
+<table class='table table-striped' *ngIf="buyers">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let buyer of buyers">
+      <td>{{ buyer.id }}</td>
+      <td>{{ buyer.name }}</td>
+    </tr>
+  </tbody>
+</table>
