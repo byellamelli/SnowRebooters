@@ -38,7 +38,7 @@ namespace CheckAging.Controllers
             //lCheck.Add(new Check() { Id = 1, DateIssued = "01/02/2005", DateCleared = "01/02/2005", Amount = "$120", PhoneNumber = "801-998-9876", EmailAddress = "test1@gmail.com" });
             //lCheck.Add(new Check() { Id = 1, DateIssued = "01/02/2005", DateCleared = "01/02/2005", Amount = "$120", PhoneNumber = "801-998-9876", EmailAddress = "test1@gmail.com" });
 
-            var connection = new SqlConnection("Server=snowrebooters.database.windows.net;Database=snowrebooter;User Id=snowrebooter;Password=Khong!8526Best;TrustServerCertificate=False;");
+            var connection = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
 
             var command = new SqlCommand("GetCheckData", connection);
             command.CommandType = CommandType.StoredProcedure;
@@ -55,12 +55,12 @@ namespace CheckAging.Controllers
                 {
                     Check c = new Check();
 
-                    c.Id = Convert.ToInt32(rdr["Id"]);
+                    // c.Id = Convert.ToInt32(rdr["Id"]);
                     c.DateIssued = rdr["dateIssued"].ToString();
-                    c.DateCleared = rdr["datetime"].ToString();
+                    c.DateCleared = rdr["dateCleared"].ToString();
                     c.Amount = rdr["amount"].ToString();
                     // c.Payee = rdr["Id"].ToString();
-                    c.PhoneNumber = rdr["Phone "].ToString();
+                    c.PhoneNumber = rdr["Phone"].ToString();
                     c.EmailAddress = rdr["email"].ToString();
 
                     lCheck.Add(c);
