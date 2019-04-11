@@ -1,0 +1,26 @@
+<p *ngIf="!checks"><em>Loading...</em></p>
+
+<table class='table table-striped' *ngIf="checks">
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>Issue Date</th>
+      <th>Cleared Date</th>
+      <th>Amount</th>
+      <th>Payee</th>
+      <th>Phone #</th>
+      <th>Email</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let check of checks">
+      <td>{{ check.id }}</td>
+      <td>{{ check.dateIssued }}</td>
+      <td>{{ check.dateCleared }}</td>
+      <td>{{ check.amount }}</td>
+      <td>{{ check.payee }}</td>
+      <td>{{ check.phoneNumber }}</td>
+      <td>{{ check.emailAddress }}</td>
+    </tr>
+  </tbody>
+</table>
