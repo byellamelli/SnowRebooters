@@ -1,4 +1,3 @@
--- create payer table
 CREATE TABLE dbo.payer (
     payerId int,
     name VARCHAR(200),
@@ -24,3 +23,30 @@ CREATE TABLE dbo.payee (
     zip VARCHAR(20)
 PRIMARY KEY CLUSTERED);
 
+create table dbo.images (
+	imageId int,
+	image VARBINARY(MAX)
+);
+
+create table dbo.payments (
+	paymentId int,
+	payerId int,
+	payeeId int,
+	amount numeric(10,2)
+);
+
+create table dbo.checks (
+	checkId int,
+	paymentId int,
+	checkNumber VARCHAR(50),
+	amount numeric(10,2),
+	dateIssued datetime,
+	dateCleared datetime,
+	issuedImageId int,
+	clearedImageId int
+);
+
+create table dbo.paymentChecks (
+	paymentId int,
+	checkId int
+);
