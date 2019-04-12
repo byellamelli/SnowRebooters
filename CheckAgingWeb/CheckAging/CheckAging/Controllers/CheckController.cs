@@ -18,7 +18,6 @@ namespace CheckAging.Controllers
     public class CheckController : Controller
     {
         private readonly IConfiguration configuration;
-
         public CheckController(IConfiguration config)
         {
             configuration = config;
@@ -47,18 +46,15 @@ namespace CheckAging.Controllers
                     c.PhoneNumber = rdr["Phone"].ToString();
                     c.EmailAddress = rdr["email"].ToString();
                     c.ReviewCount = Convert.ToInt32(rdr["reviewCount"]);
-                    c.ReviewedBy = rdr["reviewedBy"].ToString();
                     lCheck.Add(c);
                 }
                 connection.Close();
             }
             return lCheck;
         }
-
         [HttpPost("[action]")]
         public async Task SendanEmailAsync(string toEmail, string Payee, string IssuedDate)
         {
-
             try
             {
                 StringBuilder sb = new StringBuilder();
