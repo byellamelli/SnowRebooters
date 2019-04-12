@@ -28,7 +28,7 @@
       <td>{{ check.phoneNumber }}</td>
       <td>{{ check.emailAddress }}</td>
       <td>Reviewed {{ check.reviewCount }} times</td>
-      <td><button ng-click="check.reviewCount = check.reviewCount + 1" ng-init="check.reviewCount=0">REMITTANCE</button></td>
+      <td><button (click)="sendEmail(check.emailAddress, check.payee, check.dateIssued)">REMITTANCE</button></td>
     </tr>
   </tbody>
 </table>

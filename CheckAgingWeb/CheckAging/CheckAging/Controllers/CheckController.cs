@@ -53,15 +53,15 @@ namespace CheckAging.Controllers
             return lCheck;
         }
         [HttpPost("[action]")]
-        public async Task SendanEmailAsync(string toEmail, string Payee, string IssuedDate)
+        public async Task SendanEmailAsync([FromBody] Email emailObject)
         {
             try
             {
                 StringBuilder sb = new StringBuilder();
-                sb.AppendLine($"<div><p><b>Hello {Payee}! Your check is not cashed yet. What is going on?</b></p></div>");
+                sb.AppendLine($"<div><p><b>Hello {emailObject.Payee}! Your check is not cashed yet. What is going on?</b></p></div>");
                 sb.AppendLine();
                 sb.AppendLine();
-                sb.AppendLine($"<div><p>Please let us know if you have the received the check we sent to you on {IssuedDate}. If not you can reach us at snowrebooters@avidxchange.com</p></div>");
+                sb.AppendLine($"<div><p>Please let us know if you have the received the check we sent to you on {emailObject.IssuedDate}. If not you can reach us at snowrebooters@avidxchange.com</p></div>");
                 sb.AppendLine(string.Format("<div><p>Contact: 800-909-9999 </p></div>"));
 
                 string emailbody = sb.ToString();
@@ -75,7 +75,7 @@ namespace CheckAging.Controllers
                     PlainTextContent = "",
                     HtmlContent = emailbody
                 };
-                msg.AddTo(new EmailAddress(toEmail));  
+                msg.AddTo(new EmailAddress(emailObject.toEmail));  
 
                 var response = await client.SendEmailAsync(msg);
             }
