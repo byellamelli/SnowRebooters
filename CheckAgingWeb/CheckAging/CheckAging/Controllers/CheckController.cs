@@ -23,13 +23,13 @@ namespace CheckAging.Controllers
             configuration = config;
         }
         [HttpGet("[action]")]
-        public IEnumerable<Check> GetChecks()
+        public IEnumerable<Check> GetChecks(string days)
         {
             List<Check> lCheck = new List<Check>();
-
             var connection = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
             var command = new SqlCommand("GetCheckData", connection);
             command.CommandType = CommandType.StoredProcedure;
+            command.Parameters.AddWithValue("@days", days != null ? Convert.ToInt32(days) : Convert.ToInt32(0));
             connection.Open();
             
             using (SqlDataReader rdr = command.ExecuteReader())
@@ -53,15 +53,15 @@ namespace CheckAging.Controllers
             return lCheck;
         }
         [HttpPost("[action]")]
-        public async Task SendanEmailAsync(string toEmail, string Payee, string IssuedDate)
+        public async Task SendanEmailAsync([FromBody]Email emailobject)
         {
             try
             {
                 StringBuilder sb = new StringBuilder();
-                sb.AppendLine($"<div><p><b>Hello {Payee}! Your check is not cashed yet. What is going on?</b></p></div>");
+                sb.AppendLine($"<div><p><b>Hello {emailobject.Payee}! Your check is not cashed yet. What is going on?</b></p></div>");
                 sb.AppendLine();
                 sb.AppendLine();
-                sb.AppendLine($"<div><p>Please let us know if you have the received the check we sent to you on {IssuedDate}. If not you can reach us at snowrebooters@avidxchange.com</p></div>");
+                sb.AppendLine($"<div><p>Please let us know if you have the received the check we sent to you on {emailobject.IssuedDate}. If not you can reach us at snowrebooters@avidxchange.com</p></div>");
                 sb.AppendLine(string.Format("<div><p>Contact: 800-909-9999 </p></div>"));
 
                 string emailbody = sb.ToString();
@@ -75,11 +75,24 @@ namespace CheckAging.Controllers
                     PlainTextContent = "",
                     HtmlContent = emailbody
                 };
-                msg.AddTo(new EmailAddress(toEmail));  
+
+                //Attachment att = new Attachment(new MemoryStream(myBytes), name);
+                // Add attachment as txt/plain
+
+                byte[] byteData = Encoding.ASCII.GetBytes("");
+                msg.Attachments = new List<SendGrid.Helpers.Mail.Attachment>
+                {
+                    new SendGrid.Helpers.Mail.Attachment
+                    {
+                        Content = Convert.ToBase64String(byteData),
+                        Filename = "Transcript.pdf",
+                        Type = "txt/plain",
+                        Disposition = "attachment"
+                    }
+                };
+                msg.AddTo(new EmailAddress(emailobject.toEmail));  
                 var response = await client.SendEmailAsync(msg);
 
-                //select the checkid, get reviewcount and add 1 to it , save.
-                // string update = "update [dbo].[checks] SET reviewCount = @reviewCount+ 1 WHERE id=@id";
 
                 Int32 reviewCount = 0;
                 Int32 checkId = 0;
@@ -87,16 +100,17 @@ namespace CheckAging.Controllers
                
 
         var selectString = "select chk.checkId, chk.reviewCount From [dbo].[checks] as chk" +
-                          " INNER JOIN dbo.payment as p on p.paymentId=chk.paymentId" +
+                          " INNER JOIN dbo.payments as p on p.paymentId=chk.paymentId" +
                           " INNER JOIN dbo.payee as pe on pe.payeeId=p.payeeId " +
-                          " Where pe.toEmail = @toEmail";
+                          " Where pe.email = @toEmail";
+
 
                 var connection = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));              
                 SqlCommand command = new SqlCommand(selectString, connection);
 
                 connection.Open();
                 command.CommandType = CommandType.Text;
-                command.Parameters.AddWithValue("@toEmail", toEmail);
+                command.Parameters.AddWithValue("@toEmail", emailobject.toEmail);
 
 
                 SqlDataReader reader = command.ExecuteReader();
@@ -104,25 +118,22 @@ namespace CheckAging.Controllers
                 {
                     while (reader.Read())
                     {
-                         checkId = reader.GetInt16(0);
-                         reviewCount = reader.GetInt16(1);
+                         checkId = reader.GetInt32(0);
+                         reviewCount = reader.GetInt32(1);
                     }
+                    reader.NextResult();
                 }
- 
+                connection.Close();
 
 
+                reviewCount++;
+                var updateString = "update [dbo].[checks] SET reviewCount = "+  reviewCount  + " WHERE checkId = " + checkId;
+                SqlCommand cmd = new SqlCommand(updateString, connection);
+                connection.Open();
 
+                cmd.ExecuteNonQuery();
 
-
-
-
-
-
-
-
-
-
-
+                //GetChecks();
             }
             catch (Exception ex)
             {

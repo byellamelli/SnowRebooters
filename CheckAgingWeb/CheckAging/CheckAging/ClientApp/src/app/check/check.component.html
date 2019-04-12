@@ -1,34 +1,43 @@
 <p *ngIf="!checks"><em>Loading...</em></p>
 
 <table class='table table-striped' *ngIf="checks">
-  <!--<thead>
-    <tr>
-      <th>
+   <thead>
+     <tr>
+       <th>Payee Info</th>
+       <th>Issue Date</th>
+       <th>Cleared Date</th>
+       <th>Amount</th>
+       <th>Reviewed</th>
+       <th>
 
-      </th>
-      
-    </tr>
-  </thead>-->
-  <thead>
-    <tr>
-      <th>Payee</th>
-      <th>Issue Date</th>
-      <th>Cleared Date</th>
-      <th>Amount</th>
-      <th>Phone #</th>
-      <th>Email</th>      
-    </tr>
+         <button (click)="getCheckData(15)" md-button class="link-btn" title='Checks under 15 days'>15</button>&nbsp;
+
+         <button (click)="getCheckData(30)" md-button class="link-btn" title='Checks under 30 days'>30</button>&nbsp;
+
+         <button (click)="getCheckData(45)" md-button class="link-btn" title='Checks under 45 days'>45</button>&nbsp;
+
+       </th>
+    
+     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let check of checks">
-      <td>{{ check.payee }}</td>
+      <td>
+        {{ check.payee }} <br>
+        {{ check.emailAddress }} <br />
+        {{ check.phoneNumber }}
+      </td>
       <td>{{ check.dateIssued }}</td>
       <td>{{ check.dateCleared }}</td>
       <td>{{ check.amount }}</td>
-      <td>{{ check.phoneNumber }}</td>
-      <td>{{ check.emailAddress }}</td>
+
+
       <td>Reviewed {{ check.reviewCount }} times</td>
-      <td><button (click)="sendEmail(check.emailAddress, check.payee, check.dateIssued)">REMITTANCE</button></td>
+      <td>
+        <button (click)="sendEmail(check.emailAddress, check.payee, check.dateIssued)" md-button class="btn">REMITTANCE</button><br /><br />
+        <button (click)="sendEmail(check.emailAddress, check.payee, check.dateIssued)" md-button class="btn">CHECK IMAGE</button>
+
+      </td>
     </tr>
   </tbody>
 </table>
