@@ -31,14 +31,14 @@ namespace CheckAging.Controllers
             var command = new SqlCommand("GetCheckData", connection);
             command.CommandType = CommandType.StoredProcedure;
             connection.Open();
-
+            
             using (SqlDataReader rdr = command.ExecuteReader())
             {
                 while (rdr.Read())
                 {
                     Check c = new Check();
                     c.DateIssued = (Convert.ToDateTime(rdr["dateIssued"]).ToString("MM/dd/yyyy"));
-                    c.DateCleared = (Convert.ToDateTime(rdr["dateCleared"]).ToString("MM/dd/yyyy"));
+                    c.DateCleared = rdr["dateCleared"].ToString() != "" ? (Convert.ToDateTime(rdr["dateCleared"]).ToString("MM/dd/yyyy")): "";
                     if (c.DateCleared == "01/01/1900")
                         c.DateCleared = "";
                     c.Amount = Decimal.Parse(rdr["amount"].ToString());
@@ -76,8 +76,53 @@ namespace CheckAging.Controllers
                     HtmlContent = emailbody
                 };
                 msg.AddTo(new EmailAddress(toEmail));  
-
                 var response = await client.SendEmailAsync(msg);
+
+                //select the checkid, get reviewcount and add 1 to it , save.
+                // string update = "update [dbo].[checks] SET reviewCount = @reviewCount+ 1 WHERE id=@id";
+
+                Int32 reviewCount = 0;
+                Int32 checkId = 0;
+
+               
+
+        var selectString = "select chk.checkId, chk.reviewCount From [dbo].[checks] as chk" +
+                          " INNER JOIN dbo.payment as p on p.paymentId=chk.paymentId" +
+                          " INNER JOIN dbo.payee as pe on pe.payeeId=p.payeeId " +
+                          " Where pe.toEmail = @toEmail";
+
+                var connection = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));              
+                SqlCommand command = new SqlCommand(selectString, connection);
+
+                connection.Open();
+                command.CommandType = CommandType.Text;
+                command.Parameters.AddWithValue("@toEmail", toEmail);
+
+
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                         checkId = reader.GetInt16(0);
+                         reviewCount = reader.GetInt16(1);
+                    }
+                }
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             }
             catch (Exception ex)
             {
