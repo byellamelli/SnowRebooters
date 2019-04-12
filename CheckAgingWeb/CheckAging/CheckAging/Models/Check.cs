@@ -9,9 +9,9 @@ namespace CheckAging.Models
     {
         public int Id { get; set; }
 
-        public DateTime DateIssued { get; set; }
+        public string DateIssued { get; set; }
 
-        public DateTime DateCleared { get; set; }
+        public string DateCleared { get; set; }
 
         public decimal Amount { get; set; }
 
@@ -19,6 +19,9 @@ namespace CheckAging.Models
 
         public string PhoneNumber { get; set; }
         public string EmailAddress { get; set; }
+        public int ReviewCount { get; set; }
+
+        public string ReviewedBy { get; set; }
 
 
     }

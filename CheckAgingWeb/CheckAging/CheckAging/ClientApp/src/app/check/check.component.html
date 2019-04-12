@@ -1,19 +1,14 @@
 <p *ngIf="!checks"><em>Loading...</em></p>
 
-<!--
-<div class="form-group">
-  <label>
-    <span class="text-muted">Title</span>
-    <input class="form-control" [(ngModel)]="" placeholder="name" />
-  </label>
-</div>
-
-<div class="form-group">
-  <button class="btn btn-primary" (click)="Search()">Search</button>
-</div>
-    -->
-
 <table class='table table-striped' *ngIf="checks">
+  <!--<thead>
+    <tr>
+      <th>
+
+      </th>
+      
+    </tr>
+  </thead>-->
   <thead>
     <tr>
       <th>Payee</th>
@@ -21,7 +16,7 @@
       <th>Cleared Date</th>
       <th>Amount</th>
       <th>Phone #</th>
-      <th>Email</th>
+      <th>Email</th>      
     </tr>
   </thead>
   <tbody>
@@ -32,6 +27,8 @@
       <td>{{ check.amount }}</td>
       <td>{{ check.phoneNumber }}</td>
       <td>{{ check.emailAddress }}</td>
+      <td>Reviewed {{ check.reviewCount }} times</td>
+      <td><button ng-click="check.reviewCount = check.reviewCount + 1" ng-init="check.reviewCount=0">REMITTANCE</button></td>
     </tr>
   </tbody>
 </table>
