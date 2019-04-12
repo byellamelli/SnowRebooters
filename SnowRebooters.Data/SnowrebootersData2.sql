@@ -174,6 +174,7 @@ update dbo.checks set issuedImageId = 15 where checkId = 13;
 
 update dbo.checks set amount = (select dbo.payments.amount from dbo.payments where dbo.payments.paymentId = dbo.checks.paymentId);
 
+update dbo.checks set reviewCount = 0 where (reviewCount is NULL);
 
 
 
