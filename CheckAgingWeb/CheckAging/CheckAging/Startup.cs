@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SendGrid;
 
 namespace CheckAging
 {
@@ -30,6 +31,8 @@ namespace CheckAging
             });
 
             services.AddSingleton<IConfiguration>(Configuration);
+         
+            var client = new SendGridClient("CkIkoIhOTj-xInWX9kipmQ");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

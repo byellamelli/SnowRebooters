@@ -10,6 +10,7 @@ using CheckAging.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using SendGrid;
+using SendGrid.Helpers.Mail;
 
 namespace CheckAging.Controllers
 {
@@ -55,31 +56,32 @@ namespace CheckAging.Controllers
         }
 
         [HttpPost("[action]")]
-        public void SendanEmail(string toEmail)
+        public async Task SendanEmailAsync(string toEmail, string Payee, string IssuedDate)
         {
+
             try
             {
                 StringBuilder sb = new StringBuilder();
-                sb.AppendLine(string.Format("<div><p><b>Hello Norm, Your checks not cashed yet. What is going on?</b></p></div>"));
+                sb.AppendLine($"<div><p><b>Hello {Payee}! Your check is not cashed yet. What is going on?</b></p></div>");
                 sb.AppendLine();
                 sb.AppendLine();
-                sb.AppendLine(string.Format("<div><p>Please let us know if you have the received the check we sent on Jan 22, 2019. If not you can reach us at ouremail@avidxchange.com</p></div>"));
+                sb.AppendLine($"<div><p>Please let us know if you have the received the check we sent to you on {IssuedDate}. If not you can reach us at snowrebooters@avidxchange.com</p></div>");
                 sb.AppendLine(string.Format("<div><p>Contact: 800-909-9999 </p></div>"));
 
                 string emailbody = sb.ToString();
-                string toaddress = toEmail;
-                string fromaddress = "snowrebooters@avidxchange.com";
-                string subject = "Reminder to cash your CHECK!";
+                string subject = "Reminder to cash your CHECK!";               
 
-                MailMessage mail = new MailMessage(toEmail, fromaddress);
-                SmtpClient client = new SmtpClient();
-                client.DeliveryMethod = SmtpDeliveryMethod.Network;
-                client.UseDefaultCredentials = false;               
-                mail.Subject = subject;
-                mail.Body = emailbody;
-                //client.Port = 25;
-                //client.Host = "smtp.gmail.com";
-                client.Send(mail);
+                var client = new SendGridClient("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");
+                var msg = new SendGridMessage()
+                {
+                    From = new EmailAddress("snowrebooters@avidxchange.com"),
+                    Subject = subject,
+                    PlainTextContent = "",
+                    HtmlContent = emailbody
+                };
+                msg.AddTo(new EmailAddress(toEmail));  
+
+                var response = await client.SendEmailAsync(msg);
             }
             catch (Exception ex)
             {
