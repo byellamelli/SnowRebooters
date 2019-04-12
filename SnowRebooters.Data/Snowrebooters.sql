@@ -90,6 +90,8 @@ ALTER TABLE dbo.checks DROP CONSTRAINT FK_Checks_ClearedImageId;
 GO
 ALTER TABLE dbo.checks ADD CONSTRAINT FK_Checks_ClearedImageId FOREIGN KEY (clearedImageId) REFERENCES dbo.images (imageId);
 GO
+ALTER TABLE dbo.checks ADD reviewCount int;
+GO
 
 
 
