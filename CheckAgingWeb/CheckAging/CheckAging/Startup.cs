@@ -32,7 +32,7 @@ namespace CheckAging
 
             services.AddSingleton<IConfiguration>(Configuration);
          
-            var client = new SendGridClient("CkIkoIhOTj-xInWX9kipmQ");
+            var client = new SendGridClient("");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

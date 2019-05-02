@@ -67,7 +67,7 @@ namespace CheckAging.Controllers
                 string emailbody = sb.ToString();
                 string subject = "Reminder to cash your CHECK!";               
 
-                var client = new SendGridClient("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");
+                var client = new SendGridClient("");
                 var msg = new SendGridMessage()
                 {
                     From = new EmailAddress("snowrebooters@avidxchange.com"),
