@@ -2,8 +2,11 @@
   "ExpandedNodes": [
     "",
     "\\CheckAgingWeb",
-    "\\CheckAgingWeb\\CheckAging"
+    "\\CheckAgingWeb\\CheckAging",
+    "\\CheckAgingWeb\\CheckAging\\CheckAging",
+    "\\CheckAgingWeb\\CheckAging\\CheckAging\\ClientApp",
+    "\\CheckAgingWeb\\CheckAging\\CheckAging\\Controllers"
   ],
-  "SelectedNode": "\\CheckAgingWeb\\CheckAging\\CheckAging.sln",
+  "SelectedNode": "\\CheckAgingWeb\\CheckAging\\CheckAging\\Controllers\\CheckController.cs",
   "PreviewInSolutionExplorer": false
 }
